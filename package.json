@@ -1,6 +1,8 @@
 {
   "name": "argyle-task",
   "version": "1.0.0",
+	"description": "Posts Management Dashboard",
+	"author": "Roman Malieiev <aromaleev@gmail.com>",
   "private": true,
   "scripts": {
     "start": "react-scripts --experimental-json-modules start",
@@ -16,7 +18,12 @@
 		"prepare": "husky && playwright install",
     "eject": "react-scripts eject"
   },
-  "type": "module",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:romaleev/argyle-task.git",
+		"private": true
+	},
   "lint-staged": {
     "(src|tests)/**/*.{ts,tsx}": [
       "bash -c tsc --noEmit",

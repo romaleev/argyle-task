@@ -1,4 +1,9 @@
 {
+	"postPage": {
+		"title": "Posts Management Dashboard",
+		"loadError": "Failed to load",
+		"deleteError": "Failed to delete post"
+	},
 	"user": {
 		"add_post": "Add Post",
 		"user_not_found": "User not found",

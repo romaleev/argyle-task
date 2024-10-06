@@ -8,6 +8,7 @@ import UserInfoModal from '#components/modal/UserInfoModal'
 import ErrorModal from '#components/modal/ErrorModal'
 import PostInfoModal from '#components/modal/PostInfoModal'
 import { Post } from '#types/appTypes'
+import { useTranslation } from 'react-i18next'
 
 const PostPage: React.FC = () => {
 	const [state, dispatch] = useApp()
@@ -16,6 +17,7 @@ const PostPage: React.FC = () => {
 	const [postInfoID, setPostInfoID] = useState<{ userId: number; postId: number } | null>(null)
 	const [errorModalText, setErrorModalText] = useState<string | null>(null)
 	const [loading, setLoading] = useState(true)
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		const loadData = async () => {
@@ -29,7 +31,7 @@ const PostPage: React.FC = () => {
 				setLoading(false)
 			} catch (error) {
 				console.error(error)
-				setErrorModalText(`Failed to load: ${error}`) // Set error text
+				setErrorModalText(`${t('postPage.loadError')}: ${error}`) // Set error text
 			}
 		}
 
@@ -53,7 +55,7 @@ const PostPage: React.FC = () => {
 			dispatch({ posts: updatedPosts }) // Update state
 		} catch (error) {
 			console.error(error)
-			setErrorModalText(`Failed to delete post: ${error}`) // Set error text
+			setErrorModalText(`${t('postPage.deleteError')}: ${error}`) // Set error text
 		}
 	}
 
@@ -65,6 +67,7 @@ const PostPage: React.FC = () => {
 				</Box>
 			) : (
 				<>
+					<h1>{t('postPage.title')}</h1>
 					{state.users.map((user, index) => (
 						<React.Fragment key={user.id}>
 							<UserPane
