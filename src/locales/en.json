@@ -1,0 +1,44 @@
+{
+	"user": {
+		"add_post": "Add Post",
+		"user_not_found": "User not found",
+		"delete": "DELETE",
+		"comments": "Comments",
+		"no_comments_yet": "No comments yet.",
+		"no_posts_available": "No posts available for this user.",
+		"post": "{{count}} Post",
+		"posts": "{{count}} Posts",
+		"contact": "Contact Information",
+		"email": "Email",
+		"phone": "Phone",
+		"website": "Website",
+		"address": "Address",
+		"street": "Street",
+		"suite": "Suite",
+		"city": "City",
+		"zipcode": "Zipcode",
+		"geo": "Coordinates",
+		"company": "Company Information",
+		"company_name": "Company Name",
+		"catchphrase": "Catchphrase",
+		"bs": "Business"
+	},
+	"modal": {
+		"title": "Title",
+		"body": "Body",
+		"close": "Close",
+		"add_post_for": "Add a Post for {{userName}}",
+		"submit_post": "Submit Post",
+		"error": "Error",
+		"failed_to_submit_post": "Failed to submit post: {{error}}",
+		"failed_to_delete_post": "Failed to delete post: {{error}}"
+	},
+	"validation": {
+		"required": "{{field}} is required",
+		"min_length": "{{field}} must be at least {{min}} characters",
+		"max_length": "{{field}} must be at most {{max}} characters",
+		"invalid_email": "Invalid email address",
+		"min_value": "{{field}} must be greater than or equal to {{min}}",
+		"max_value": "{{field}} must be less than or equal to {{max}}"
+	}
+}
