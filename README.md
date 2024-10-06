@@ -19,7 +19,7 @@ Details are [here](FE%20Task.pdf).
 - **React**: For building the user interface.
 - **React Context and Hooks**: For state management.
 - **TypeScript**: Provides type safety and improved development experience.
-- **Material-UI (MUI)**: Used for component styling and layout.
+- **Material-UI (MUI)**: Used for mobile-first responsive styling and layout.
 - **Ky**: Simplifies API request handling.
 - **i18next**: Enables localization and internationalization for multilingual support.
 - **React Testing Library**: Used for unit testing the components.
