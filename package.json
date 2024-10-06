@@ -1,26 +1,67 @@
 {
   "name": "argyle-task",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.112",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
-  },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts --experimental-json-modules start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "npm run test-unit && npm run test-e2e",
+    "test-unit": "react-scripts test --watchAll=false",
+		"test-unit-watch": "react-scripts test",
+    "test-e2e": "node --import=tsx ./node_modules/.bin/playwright test",
+    "update-mocks": "node --import=tsx ./src/tests/scripts/updateMocks.ts",
+    "update-deps": "npm i npm-check-updates@latest --save-dev && ncu -u --reject 'eslint eslint-plugin-unused-imports @typescript-eslint/eslint-plugin' && npm i && npm audit fix",
+    "lint": "eslint 'src/**/*.{ts,tsx,json}' && prettier --log-level warn 'src/**/**.{ts,tsx,md}' && tsc",
+    "lint-fix": "eslint --fix 'src/**/*.{ts,tsx,json}' && prettier --log-level warn --write 'src/**/*.{ts,tsx,md}' && tsc",
+		"prepare": "husky && playwright install",
     "eject": "react-scripts eject"
+  },
+  "type": "module",
+  "lint-staged": {
+    "(src|tests)/**/*.{ts,tsx}": [
+      "bash -c tsc --noEmit",
+      "eslint --fix",
+      "prettier --write --log-level warn"
+    ]
+  },
+  "jest": {
+		"testMatch": [
+			"<rootDir>/src/tests/components/**/*.test.(ts|tsx)",
+			"<rootDir>/src/tests/state/**/*.test.(ts|tsx)"
+		],
+    "transform": {
+      "node_modules/(ky)/.+\\\\.(j|t)sx?$": "ts-jest",
+      "^.+\\.(ts|tsx)$": [
+        "ts-jest",
+        {
+          "tsconfig": "./tsconfig.json",
+          "diagnostics": {
+            "ignoreCodes": [
+              "TS151001"
+            ]
+          }
+        }
+      ]
+    },
+    "transformIgnorePatterns": [],
+    "moduleNameMapper": {
+      "^#src/(.*)$": "<rootDir>/src/$1",
+      "^#components/(.*)$": "<rootDir>/src/components/$1",
+      "^#providers/(.*)$": "<rootDir>/src/providers/$1",
+      "^#types/(.*)$": "<rootDir>/src/types/$1",
+      "^#api/(.*)$": "<rootDir>/src/api/$1",
+      "^#pages/(.*)$": "<rootDir>/src/pages/$1",
+      "^#tests/(.*)$": "<rootDir>/src/tests/$1"
+    }
+  },
+  "imports": {
+    "#src/*": "./src/*",
+    "#api/*": "./src/api/*",
+    "#components/*": "./src/components/*",
+    "#providers/*": "./src/providers/*",
+    "#pages/*": "./src/pages/*",
+    "#types/*": "./src/types/*",
+    "#tests/*": "./src/tests/*"
   },
   "eslintConfig": {
     "extends": [
@@ -39,5 +80,44 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.2",
+    "@mui/material": "^6.1.2",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.112",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "i18next": "^23.15.2",
+    "ky": "^1.7.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
+    "react-i18next": "^15.0.2",
+    "react-router-dom": "^6.26.2",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@playwright/test": "^1.47.2",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.37.1",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "playwright": "^1.47.2",
+    "prettier": "^3.3.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "ts-jest": "^29.2.5",
+    "tsx": "^4.19.1"
   }
 }
