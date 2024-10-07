@@ -21,9 +21,9 @@ test.describe('PostinfoModal', () => {
 		// Open PostInfoModal by clicking on a post title
 		await page.locator(`text=${mockPost?.title}`).click()
 
-		await page.waitForTimeout(500)
+		await page.waitForSelector('[data-testid="post-info-modal-content"]', { state: 'visible' })
 
-		const modal = page.locator('[data-testid="modal-content"]')
+		const modal = page.locator('[data-testid="post-info-modal-content"]')
 
 		// Ensure the modal shows the post details and comments section
 		await expect(modal.locator(`text=${mockUser.name}`)).toBeVisible()

@@ -18,10 +18,10 @@ test.describe('ErrorModal', () => {
 		await page.click(`button:has-text("${i18n.t('user.delete')}")`)
 
 		// Wait for a brief moment to let the modal render
-		await page.waitForTimeout(1500)
+		await page.waitForSelector('[data-testid="error-modal-content"]', { state: 'visible' })
 
 		// Use a more specific locator by targeting the modal content
-		const modal = page.locator('[data-testid="modal-content"]')
+		const modal = page.locator('[data-testid="error-modal-content"]')
 
 		// Ensure the error modal heading appears using hasText
 		await expect(modal.locator('h6').filter({ hasText: i18n.t('modal.error') })).toBeVisible()

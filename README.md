@@ -17,7 +17,7 @@ Details are [here](FE%20Task.pdf).
 ## Tech Stack
 
 - **React**: For building the user interface.
-- **React Context and Hooks**: For state management.
+- **Zustand**: For state management.
 - **TypeScript**: Provides type safety and improved development experience.
 - **Material-UI (MUI)**: Used for mobile-first responsive styling and layout.
 - **Ky**: Simplifies API request handling.
@@ -27,7 +27,6 @@ Details are [here](FE%20Task.pdf).
 
 ## Future Improvements
 
-- **State Management**: As the application grows, managing the global state with React Context could become cumbersome. Migrating to a more scalable solution like **Redux** or **Zustand** could help future-proof the app.
 - **Lazy Loading**: For better performance, implement lazy loading or pagination to handle large datasets, especially for posts and comments.
 - **Accessibility**: Improve accessibility by adding ARIA labels and roles where necessary.
 

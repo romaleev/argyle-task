@@ -43,10 +43,36 @@ export interface Comment {
 	body: string
 }
 
+export interface AppModals {
+	addPost?: {
+		userId: number
+	}
+	userInfo?: {
+		userId: number
+	}
+	postInfo?: {
+		userId: number
+		postId: number
+	}
+	errorInfo?: {
+		errorMessage: string
+	}
+}
+
 export interface AppState {
 	posts: Post[]
 	users: User[]
 	comments: Comment[]
+	modals?: AppModals
+}
+
+export interface AppActions {
+	fetch: () => Promise<void>
+	addPost: (post: Omit<Post, 'id'>) => Promise<void>
+	deletePost: (postId: number) => Promise<void>
+	setModals: (modals: AppModals) => void
+	getState: () => AppState
+	setState: (partialState: Partial<AppState>) => void
 }
 
 export interface PostFormInputs {
@@ -56,16 +82,10 @@ export interface PostFormInputs {
 
 export interface UserPostProps {
 	post: Post
-	onPostInfo: (postId: number) => void
-	onDelete: (postId: number) => void // Add delete post handler
 }
 
 export interface UserPaneProps {
 	userId: number
-	onPostInfo: (postId: number) => void
-	onUserInfo: (userId: number) => void
-	onAddPost: (post: number) => void
-	onDeletePost: (postId: number) => void // Add delete post handler
 	expanded?: boolean
 }
 
@@ -74,25 +94,7 @@ export interface UserCommentProps {
 }
 
 export interface AppModalProps {
-	onClose: () => void
+	onClose?: () => void
 	children?: React.ReactNode
 	width?: string
-}
-
-export interface AddPostModalProps extends AppModalProps {
-	userId: number
-	onAddPost: (post: Omit<Post, 'id'>) => Promise<void>
-}
-
-export interface ErrorModalProps extends AppModalProps {
-	errorMessage: string
-}
-
-export interface UserInfoModalProps extends AppModalProps {
-	userId: number
-}
-
-export interface PostInfoModalProps extends AppModalProps {
-	userId: number
-	postId: number
 }

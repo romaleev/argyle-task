@@ -10,31 +10,24 @@ import {
 	AccordionDetails,
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { useApp } from '#providers/StateProvider'
 import { UserPaneProps } from '#types/appTypes'
 import UserPost from '#components/user/UserPost'
 import { useTranslation } from 'react-i18next'
+import { useActions, usePosts, useUsers } from '#src/stores/appStore'
 
-const UserPane: React.FC<UserPaneProps> = ({
-	userId,
-	expanded: initExpanded = false,
-	onPostInfo,
-	onAddPost,
-	onUserInfo,
-	onDeletePost,
-}) => {
-	const [state] = useApp()
+const UserPane: React.FC<UserPaneProps> = ({ userId, expanded: initExpanded = false }) => {
 	const { t } = useTranslation() // Using i18next for translations
 	const [expanded, setExpanded] = useState<boolean>(initExpanded) // Accordion state
 	const divRef = useRef<HTMLDivElement>(null) // Type the ref properly
 	const initRef = useRef(true)
+	const users = useUsers()
+	const posts = usePosts()
+	const actions = useActions()
 
 	if (!userId) return null // Add this check before filtering posts
 
-	const user = state.users.find((user) => user.id === userId)
-	const postsSorted = state.posts
-		.filter((post) => post.userId === userId)
-		.sort((a, b) => b.id - a.id)
+	const user = users.find((user) => user.id === userId)
+	const postsSorted = posts.filter((post) => post.userId === userId).sort((a, b) => b.id - a.id)
 
 	if (!user) {
 		return <Typography variant='body1'>{t('user.user_not_found')}</Typography> // Use translation for 'User not found'
@@ -45,6 +38,7 @@ const UserPane: React.FC<UserPaneProps> = ({
 			initRef.current = false
 			return
 		}
+		// Expand on post add
 		if (!expanded) handleAccordionToggle()
 	}, [postsSorted.length])
 
@@ -73,7 +67,7 @@ const UserPane: React.FC<UserPaneProps> = ({
 						sx={{ zIndex: '1' }}
 						onClick={(event) => {
 							event.stopPropagation()
-							onUserInfo(userId)
+							actions.setModals({ userInfo: { userId } })
 						}}
 					>
 						{user.name}
@@ -93,7 +87,7 @@ const UserPane: React.FC<UserPaneProps> = ({
 						variant='contained'
 						onClick={(event) => {
 							event.stopPropagation()
-							onAddPost(userId)
+							actions.setModals({ addPost: { userId } })
 						}}
 						sx={{ marginLeft: '16px', marginRight: '16px' }}
 					>
@@ -110,9 +104,7 @@ const UserPane: React.FC<UserPaneProps> = ({
 							{t('user.no_posts_available')} {/* Translated no posts available */}
 						</Typography>
 					) : (
-						postsSorted.map((post) => (
-							<UserPost key={post.id} post={post} onPostInfo={onPostInfo} onDelete={onDeletePost} />
-						))
+						postsSorted.map((post) => <UserPost key={post.id} post={post} />)
 					)}
 				</Grid2>
 			</AccordionDetails>

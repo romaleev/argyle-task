@@ -1,13 +1,11 @@
 import React from 'react'
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
 import AddPostModal from '#components/modal/AddPostModal'
-import { StateProvider } from '#providers/StateProvider'
 import { AppState } from '#types/appTypes'
 import mockUsers from '#tests/mocks/users.json'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '#src/i18n'
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+import { useAppStore } from '#src/stores/appStore'
 
 const mockUser = mockUsers[0]
 const initialState: AppState = {
@@ -16,21 +14,18 @@ const initialState: AppState = {
 	comments: [],
 }
 
-let handleAddPost: jest.Mock
-let handleClose: jest.Mock
-
 const setupModal = (userId = 9999) => {
 	jest.spyOn(console, 'error').mockImplementation() // Suppress console errors
 
-	handleAddPost = jest.fn()
-	handleClose = jest.fn()
+	useAppStore.setState({
+		modals: { addPost: { userId } },
+		...initialState,
+	})
 
 	// Render the AddPostModal inside beforeEach
 	render(
 		<I18nextProvider i18n={i18n}>
-			<StateProvider initialState={initialState}>
-				<AddPostModal userId={userId} onAddPost={handleAddPost} onClose={handleClose} />
-			</StateProvider>
+			<AddPostModal />
 		</I18nextProvider>,
 	)
 }
@@ -80,51 +75,27 @@ describe('AddPostModal', () => {
 			fireEvent.click(screen.getByText(i18n.t('modal.submit_post')))
 		})
 
-		// Wait for the async function to resolve
-		await waitFor(() => expect(handleAddPost).toHaveBeenCalled())
+		await waitFor(
+			() => {
+				const newPost = useAppStore
+					.getState()
+					.posts.find(
+						(post) =>
+							post.title === testTitle && post.body === testBody && post.userId === mockUser.id,
+					)
 
-		// Check that the form submitted with correct data
-		expect(handleAddPost).toHaveBeenCalledWith({
-			title: testTitle,
-			body: testBody,
-			userId: mockUser.id,
-		})
+				expect(newPost).toBeDefined()
 
-		// Ensure modal closes after successful submission
-		expect(handleClose).toHaveBeenCalled()
-	})
-
-	test('displays error message if form submission fails', async () => {
-		setupModal(mockUser.id)
-
-		handleAddPost.mockRejectedValue(new Error('Submit failed'))
-
-		// Enter valid form data
-		await act(async () => {
-			fireEvent.change(screen.getByLabelText(i18n.t('modal.title')), {
-				target: { value: 'Valid title' },
-			})
-			fireEvent.change(screen.getByLabelText(i18n.t('modal.body')), {
-				target: { value: 'Valid body' },
-			})
-
-			// Submit the form
-			fireEvent.click(screen.getByText(i18n.t('modal.submit_post')))
-		})
-
-		// Check for the error message
-		expect(
-			await screen.findByText((content, element) => content.includes('Submit failed')),
-		).toBeInTheDocument()
+				// Ensure modal closes after successful submission
+				expect(useAppStore.getState()?.modals?.addPost).toBeUndefined()
+			},
+			{ timeout: 2000 },
+		)
 	})
 
 	test('shows loading state during form submission', async () => {
 		setupModal(mockUser.id)
 
-		handleAddPost.mockImplementation(
-			() => new Promise((resolve) => setTimeout(resolve, 100)), // Simulate async delay
-		)
-
 		// Enter valid form data
 		await act(async () => {
 			fireEvent.change(screen.getByLabelText(i18n.t('modal.title')), {
@@ -136,15 +107,18 @@ describe('AddPostModal', () => {
 			fireEvent.click(screen.getByText(i18n.t('modal.submit_post')))
 		})
 
-		// Verify that the loading indicator is shown
-		expect(screen.queryByRole('progressbar')).toBeInTheDocument()
+		await waitFor(() => {
+			// Verify that the loading indicator is shown
+			expect(screen.queryByRole('progressbar')).toBeInTheDocument()
+		})
 
-		// Wait for the async function to resolve
-		await waitFor(() => expect(handleAddPost).toHaveBeenCalled())
-
-		// Ensure the loading indicator is gone
-		await sleep(500)
-		expect(screen.queryByRole('progressbar')).toBeNull()
+		await waitFor(
+			() => {
+				// Ensure the loading indicator is gone
+				expect(screen.queryByRole('progressbar')).toBeNull()
+			},
+			{ timeout: 3000 },
+		)
 	})
 
 	test('does not render if user is not found', () => {

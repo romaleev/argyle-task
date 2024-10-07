@@ -1,29 +1,29 @@
 {
   "name": "argyle-task",
   "version": "1.0.0",
-	"description": "Posts Management Dashboard",
-	"author": "Roman Malieiev <aromaleev@gmail.com>",
+  "description": "Posts Management Dashboard",
+  "author": "Roman Malieiev <aromaleev@gmail.com>",
   "private": true,
   "scripts": {
     "start": "react-scripts --experimental-json-modules start",
     "build": "react-scripts build",
     "test": "npm run test-unit && npm run test-e2e",
     "test-unit": "react-scripts test --watchAll=false",
-		"test-unit-watch": "react-scripts test",
+    "test-unit-watch": "react-scripts test",
     "test-e2e": "node --import=tsx ./node_modules/.bin/playwright test",
     "update-mocks": "node --import=tsx ./src/tests/scripts/updateMocks.ts",
     "update-deps": "npm i npm-check-updates@latest --save-dev && ncu -u --reject 'eslint eslint-plugin-unused-imports @typescript-eslint/eslint-plugin' && npm i && npm audit fix",
     "lint": "eslint 'src/**/*.{ts,tsx,json}' && prettier --log-level warn 'src/**/**.{ts,tsx,md}' && tsc",
     "lint-fix": "eslint --fix 'src/**/*.{ts,tsx,json}' && prettier --log-level warn --write 'src/**/*.{ts,tsx,md}' && tsc",
-		"prepare": "husky && playwright install",
+    "prepare": "husky && playwright install",
     "eject": "react-scripts eject"
   },
-	"type": "module",
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:romaleev/argyle-task.git",
-		"private": true
-	},
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:romaleev/argyle-task.git",
+    "private": true
+  },
   "lint-staged": {
     "(src|tests)/**/*.{ts,tsx}": [
       "bash -c tsc --noEmit",
@@ -32,10 +32,10 @@
     ]
   },
   "jest": {
-		"testMatch": [
-			"<rootDir>/src/tests/components/**/*.test.(ts|tsx)",
-			"<rootDir>/src/tests/state/**/*.test.(ts|tsx)"
-		],
+    "testMatch": [
+      "<rootDir>/src/tests/components/**/*.test.(ts|tsx)",
+      "<rootDir>/src/tests/state/**/*.test.(ts|tsx)"
+    ],
     "transform": {
       "node_modules/(ky)/.+\\\\.(j|t)sx?$": "ts-jest",
       "^.+\\.(ts|tsx)$": [
@@ -107,7 +107,8 @@
     "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",

@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { TextField, Button, CircularProgress, Typography, Box } from '@mui/material'
-import { useApp } from '#providers/StateProvider'
-import { PostFormInputs, AddPostModalProps } from '#types/appTypes'
+import { AppModalProps, PostFormInputs } from '#types/appTypes'
 import AppModal from '#components/modal/AppModal'
 import { useTranslation } from 'react-i18next'
+import { useActions, useModals, useUsers } from '#src/stores/appStore'
 
-const AddPostModal: React.FC<AddPostModalProps> = ({ userId, onAddPost, onClose }) => {
-	const [state] = useApp()
+const AddPostModal: React.FC<AppModalProps> = () => {
 	const { t } = useTranslation()
 	const {
 		register,
@@ -17,9 +16,17 @@ const AddPostModal: React.FC<AddPostModalProps> = ({ userId, onAddPost, onClose 
 	} = useForm<PostFormInputs>()
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
+	const users = useUsers()
+	const modals = useModals()
+	const actions = useActions()
 
-	const user = state.users.find((user) => user.id === userId)
+	if (!modals?.addPost) return null
+	const userId = modals.addPost.userId
+	const onClose = () => {
+		actions.setModals({ addPost: undefined })
+	}
 
+	const user = users.find((user) => user.id === userId)
 	if (!user) return null
 
 	const userName = user ? user.name : t('user.user_not_found')
@@ -29,9 +36,9 @@ const AddPostModal: React.FC<AddPostModalProps> = ({ userId, onAddPost, onClose 
 		setError(null)
 
 		try {
-			await onAddPost({ title: data.title, body: data.body, userId })
+			await actions.addPost({ title: data.title, body: data.body, userId })
 			reset()
-			onClose()
+			onClose?.()
 		} catch (error) {
 			console.error(error)
 			setError(
@@ -46,11 +53,11 @@ const AddPostModal: React.FC<AddPostModalProps> = ({ userId, onAddPost, onClose 
 
 	return (
 		<AppModal onClose={onClose}>
-			<Typography variant='h6' gutterBottom>
-				{t('modal.add_post_for', { userName })}
-			</Typography>
+			<form onSubmit={handleSubmit(onSubmit)} data-testid='add-post-modal-content'>
+				<Typography variant='h6' gutterBottom>
+					{t('modal.add_post_for', { userName })}
+				</Typography>
 
-			<form onSubmit={handleSubmit(onSubmit)}>
 				<TextField
 					label={t('modal.title')}
 					{...register('title', {

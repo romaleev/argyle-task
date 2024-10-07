@@ -17,9 +17,9 @@ test.describe('Modal', () => {
 		// Open UserInfoModal by clicking on the user name
 		await page.locator(`text=${mockUser.name}`).click()
 
-		await page.waitForTimeout(500)
+		await page.waitForSelector('[data-testid="user-info-modal-content"]', { state: 'visible' })
 
-		const modal = page.locator('[data-testid="modal-content"]')
+		const modal = page.locator('[data-testid="user-info-modal-content"]')
 
 		// Verify the user's contact details
 		await expect(modal.locator(`text=${i18n.t('user.contact')}`)).toBeVisible()

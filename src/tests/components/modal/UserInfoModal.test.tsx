@@ -1,30 +1,25 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import UserInfoModal from '#components/modal/UserInfoModal'
-import { StateProvider } from '#providers/StateProvider'
-import { AppState } from '#types/appTypes'
 import mockUsers from '#tests/mocks/users.json'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '#src/i18n'
+import { useAppStore } from '#src/stores/appStore'
 
 const mockUser = mockUsers[0]
-const initialState: AppState = {
-	users: [mockUser],
-	posts: [],
-	comments: [],
-}
-
-let handleClose: jest.Mock
 
 const setupModal = (userId = 9999) => {
-	handleClose = jest.fn()
+	useAppStore.setState({
+		modals: { userInfo: { userId } },
+		users: [mockUser],
+		posts: [],
+		comments: [],
+	})
 
 	// Render the UserInfoModal before each test except for the invalid user test
 	render(
 		<I18nextProvider i18n={i18n}>
-			<StateProvider initialState={initialState}>
-				<UserInfoModal userId={userId} onClose={handleClose} />
-			</StateProvider>
+			<UserInfoModal />
 		</I18nextProvider>,
 	)
 }
@@ -83,8 +78,7 @@ describe('UserInfoModal', () => {
 		// Click the close button
 		fireEvent.click(screen.getByText(i18n.t('modal.close')))
 
-		// Ensure the onClose callback is called
-		expect(handleClose).toHaveBeenCalled()
+		expect(useAppStore.getState()?.modals?.userInfo).toBeUndefined()
 	})
 
 	test('does not render if user is not found', () => {

@@ -1,18 +1,28 @@
 import React from 'react'
 import { Typography, Box, Button } from '@mui/material'
 import AppModal from '#components/modal/AppModal'
-import { useApp } from '#providers/StateProvider'
-import { PostInfoModalProps } from '#types/appTypes'
+import { AppModalProps } from '#types/appTypes'
 import UserComment from '#components/user/UserComment'
 import { useTranslation } from 'react-i18next'
+import { useActions, useComments, useModals, usePosts, useUsers } from '#src/stores/appStore'
 
-const PostInfoModal: React.FC<PostInfoModalProps> = ({ userId, postId, onClose }) => {
-	const [state] = useApp()
+const PostInfoModal: React.FC<AppModalProps> = () => {
 	const { t } = useTranslation()
+	const users = useUsers()
+	const posts = usePosts()
+	const comments = useComments()
+	const modals = useModals()
+	const actions = useActions()
 
-	const user = state.users.find((u) => u.id === userId)
-	const post = state.posts.find((p) => p.id === postId)
-	const postComments = state.comments
+	if (!modals?.postInfo) return null
+	const { userId, postId } = modals.postInfo
+	const onClose = () => {
+		actions.setModals({ postInfo: undefined })
+	}
+
+	const user = users.find((u) => u.id === userId)
+	const post = posts.find((p) => p.id === postId)
+	const postComments = comments
 		.filter((comment) => comment.postId === postId)
 		.sort((a, b) => b.id - a.id)
 
@@ -20,7 +30,7 @@ const PostInfoModal: React.FC<PostInfoModalProps> = ({ userId, postId, onClose }
 
 	return (
 		<AppModal onClose={onClose} width='60vw'>
-			<Box sx={{ padding: 2, maxHeight: '80vh', overflowY: 'auto' }}>
+			<Box sx={{ maxHeight: '80vh', overflowY: 'auto' }} data-testid='post-info-modal-content'>
 				<Typography variant='h5' gutterBottom>
 					{user.name}
 				</Typography>

@@ -1,17 +1,16 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import PostInfoModal from '#components/modal/PostInfoModal'
-import { StateProvider } from '#providers/StateProvider'
 import { AppState } from '#types/appTypes'
 import mockPosts from '#tests/mocks/posts.json'
 import mockUsers from '#tests/mocks/users.json'
 import mockComments from '#tests/mocks/comments.json'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '#src/i18n'
+import { useAppStore } from '#src/stores/appStore'
 
 const mockPost = mockPosts[0]
 const mockUser = mockUsers[0]
-let handleClose: jest.Mock
 
 const initialState: AppState = {
 	posts: [mockPost],
@@ -21,12 +20,14 @@ const initialState: AppState = {
 
 // A utility function to render the PostInfoModal in different scenarios
 const setup = (userId: number, postId: number, state = initialState) => {
-	handleClose = jest.fn()
+	useAppStore.setState({
+		modals: { postInfo: { userId, postId } },
+		...state,
+	})
+
 	render(
 		<I18nextProvider i18n={i18n}>
-			<StateProvider initialState={state}>
-				<PostInfoModal userId={userId} postId={postId} onClose={handleClose} />
-			</StateProvider>
+			<PostInfoModal />
 		</I18nextProvider>,
 	)
 }
@@ -74,8 +75,7 @@ describe('PostInfoModal', () => {
 		// Click the close button
 		fireEvent.click(screen.getByText(i18n.t('modal.close')))
 
-		// Ensure the onClose callback is called
-		expect(handleClose).toHaveBeenCalled()
+		expect(useAppStore.getState()?.modals?.postInfo).toBeUndefined()
 	})
 
 	test('does not render if post is not found', () => {

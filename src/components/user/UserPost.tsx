@@ -11,32 +11,31 @@ import {
 	Link,
 } from '@mui/material'
 import { UserPostProps } from '#types/appTypes'
-import { useApp } from '#providers/StateProvider'
 import { useTranslation } from 'react-i18next'
+import { useActions, useComments } from '#src/stores/appStore'
 
-const UserPost: React.FC<UserPostProps> = ({ post, onDelete, onPostInfo }) => {
+const UserPost: React.FC<UserPostProps> = ({ post }) => {
 	const [loading, setLoading] = useState(false)
-	const [state] = useApp()
 	const { t } = useTranslation()
+	const comments = useComments()
+	const actions = useActions()
 
 	const handleDelete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		event.stopPropagation()
 		setLoading(true)
 		try {
-			await onDelete(post.id)
-		} finally {
-			setLoading(false)
+			await actions.deletePost(post.id)
+		} catch (error) {
+			console.error(error)
+			actions.setModals({ errorInfo: { errorMessage: `${t('postPage.deleteError')}: ${error}` } })
 		}
+		setLoading(false)
 	}
 
-	const postComments = state.comments.filter((comment) => comment.postId === post.id)
+	const postComments = comments.filter((comment) => comment.postId === post.id)
 
 	return (
-		<Grid2
-			key={post.id}
-			size={{ xs: 12, sm: 6, md: 4 }}
-			data-testid={`user-post-${post.userId}-${post.id}`}
-		>
+		<Grid2 key={post.id} size={{ xs: 12, sm: 6, md: 4 }}>
 			<Card
 				sx={{
 					height: '100%', // Ensure card takes full height of its container
@@ -56,7 +55,8 @@ const UserPost: React.FC<UserPostProps> = ({ post, onDelete, onPostInfo }) => {
 						flexDirection: 'column',
 						cursor: 'pointer',
 					}}
-					onClick={() => onPostInfo(post.id)} // Trigger PostInfoModal
+					data-testid={`user-post-${post.userId}-${post.id}`}
+					onClick={() => actions.setModals({ postInfo: { userId: post.userId, postId: post.id } })} // Trigger PostInfoModal
 				>
 					<Box display='flex' justifyContent='space-between' alignItems='flex-start'>
 						{/* Post Title */}
@@ -98,12 +98,7 @@ const UserPost: React.FC<UserPostProps> = ({ post, onDelete, onPostInfo }) => {
 						<Divider sx={{ my: 2 }} />
 
 						{/* Link to Open PostInfoModal */}
-						<Link
-							component='button'
-							variant='body2'
-							underline='hover'
-							data-testid={`post-title-${post.id}`}
-						>
+						<Link component='button' variant='body2' underline='hover'>
 							{postComments.length} {t('user.comments', { count: postComments.length })}
 						</Link>
 					</Box>

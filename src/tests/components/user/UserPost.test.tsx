@@ -1,13 +1,13 @@
 import React from 'react'
-import { render, screen, fireEvent, act } from '@testing-library/react'
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
 import UserPost from '#components/user/UserPost'
-import { StateProvider } from '#providers/StateProvider'
 import { AppState } from '#types/appTypes'
 import mockComments from '#tests/mocks/comments.json'
 import mockPosts from '#tests/mocks/posts.json'
 import mockUsers from '#tests/mocks/users.json'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '#src/i18n'
+import { useAppStore } from '#src/stores/appStore'
 
 const mockUser = mockUsers[0]
 const mockPost = mockPosts[0]
@@ -17,18 +17,12 @@ const initialState: AppState = {
 	comments: mockComments,
 }
 
-let handleDelete: jest.Mock
-let handlePostInfo: jest.Mock
-
 const setup = (state = initialState) => {
-	handleDelete = jest.fn()
-	handlePostInfo = jest.fn()
+	useAppStore.setState(state)
 
 	render(
 		<I18nextProvider i18n={i18n}>
-			<StateProvider initialState={state}>
-				<UserPost post={mockPost} onDelete={handleDelete} onPostInfo={handlePostInfo} />
-			</StateProvider>
+			<UserPost post={mockPost} />
 		</I18nextProvider>,
 	)
 }
@@ -55,50 +49,64 @@ describe('UserPost', () => {
 		).toBeInTheDocument()
 	})
 
-	test('calls onDelete when Delete button is clicked', async () => {
+	test('deletes post when the Delete button is clicked', async () => {
 		setup()
 
-		// Simulate clicking the Delete button
+		const post = useAppStore
+			.getState()
+			.posts.find((post) => post.id === mockPosts[0].id && post.userId === mockUser.id)
+		expect(post).toBeDefined()
+
+		// Update the test to find the DELETE button with the correct test ID
+		const deleteButton = screen.getByTestId(`delete-button-${mockPosts[0].id}`)
+
+		// Click the delete button
 		await act(async () => {
-			fireEvent.click(screen.getByText(i18n.t('user.delete')))
+			fireEvent.click(deleteButton)
 		})
 
-		// Check if the onDelete handler was called with the correct postId
-		expect(handleDelete).toHaveBeenCalledTimes(1)
-		expect(handleDelete).toHaveBeenCalledWith(mockPost.id)
+		await waitFor(
+			() => {
+				const deletedPost = useAppStore
+					.getState()
+					.posts.find((post) => post.id === mockPosts[0].id && post.userId === mockUser.id)
+				expect(deletedPost).toBeUndefined()
+			},
+			{ timeout: 3000 },
+		)
 	})
 
-	test('calls onPostInfo when comment link is clicked', async () => {
+	test('calls postInfo modal when a post is clicked', async () => {
 		setup()
-
-		// Simulate clicking on the comments link
+		// Simulate clicking the first post's title
 		await act(async () => {
-			fireEvent.click(screen.getByText(/Comments/i))
+			fireEvent.click(screen.getByTestId(`user-post-${mockPosts[0].userId}-${mockPosts[0].id}`))
 		})
 
-		// Check if the onPostInfo handler was called with the correct postId
-		expect(handlePostInfo).toHaveBeenCalledTimes(1)
-		expect(handlePostInfo).toHaveBeenCalledWith(mockPost.id)
+		await waitFor(() => {
+			expect(useAppStore.getState().modals?.postInfo).toBeDefined()
+		})
 	})
 
 	test('displays loading state when delete is in progress', async () => {
 		setup()
-
-		// Simulate clicking the delete button and having it in loading state
-		handleDelete.mockImplementation(() => new Promise((resolve) => setTimeout(resolve, 100)))
 
 		// Trigger the delete action
 		await act(async () => {
 			fireEvent.click(screen.getByText(i18n.t('user.delete')))
 		})
 
-		// Check if loading spinner is shown (progressbar)
-		expect(screen.getByRole('progressbar')).toBeInTheDocument()
+		await waitFor(() => {
+			// Check if loading spinner is shown (progressbar)
+			expect(screen.getByRole('progressbar')).toBeInTheDocument()
+		})
 
-		// Wait for async action to finish
-		await act(async () => new Promise((resolve) => setTimeout(resolve, 100)))
-
-		// Ensure loading spinner is removed after completion
-		expect(screen.queryByRole('progressbar')).toBeNull()
+		await waitFor(
+			() => {
+				// Ensure loading spinner is removed after completion
+				expect(screen.queryByRole('progressbar')).toBeNull()
+			},
+			{ timeout: 3000 },
+		)
 	})
 })
