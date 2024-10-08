@@ -13,22 +13,30 @@ Details are [here](FE%20Task.pdf).
 - **Delete Post**: Users can delete posts, and the UI will reflect this change.
 - **Responsive Design**: The UI is designed to be responsive and adjusts based on the device size.
 - **Localization**: The app supports multiple languages using **i18next**. Default language is English.
+- **Accessibility**: Ensures usability with assistive technologies like screen readers and keyboard navigation.
 
 ## Tech Stack
 
 - **React**: For building the user interface.
-- **Zustand**: For state management.
+- **Zustand**: For optimized state management.
 - **TypeScript**: Provides type safety and improved development experience.
 - **Material-UI (MUI)**: Used for mobile-first responsive styling and layout.
 - **Ky**: Simplifies API request handling.
 - **i18next**: Enables localization and internationalization for multilingual support.
 - **React Testing Library**: Used for unit testing the components.
 - **Playwright**: Used for end-to-end testing of user interactions.
+- **Eslint & Prettier**: Enforces coding standards and auto-formats the code for consistency.
+- **Husky**: Runs pre-commit hooks to ensure code quality with linting and tests.
+
+## Technical Decisions
+
+- **Zustand over Redux**: Chose Zustand for its minimalistic approach, which provides a more straightforward solution for managing state in this project. Redux, while powerful, would have introduced unnecessary complexity for the scope of this app.
+- **Ky over Axios**: Ky was selected due to its smaller bundle size and built-in features like automatic retries and response parsing. This allowed to write simpler, cleaner code without additional configuration.
+- **Testing Tools**: Opted for Playwright for end-to-end tests due to its rich feature set and ability to run tests across multiple browsers, providing better cross-browser compatibility testing. Jest and React Testing Library were used for unit testing to focus on component behavior.
 
 ## Future Improvements
 
 - **Lazy Loading**: For better performance, implement lazy loading or pagination to handle large datasets, especially for posts and comments.
-- **Accessibility**: Improve accessibility by adding ARIA labels and roles where necessary.
 
 ## Installation & Setup
 

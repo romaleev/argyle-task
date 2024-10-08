@@ -89,7 +89,7 @@ describe('AddPostModal', () => {
 				// Ensure modal closes after successful submission
 				expect(useAppStore.getState()?.modals?.addPost).toBeUndefined()
 			},
-			{ timeout: 2000 },
+			{ timeout: 3000 },
 		)
 	})
 

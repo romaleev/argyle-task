@@ -75,6 +75,7 @@ const AddPostModal: React.FC<AppModalProps> = () => {
 					helperText={errors.title ? errors.title.message : ''}
 					fullWidth
 					margin='normal'
+					autoFocus
 				/>
 
 				<TextField
@@ -98,7 +99,7 @@ const AddPostModal: React.FC<AppModalProps> = () => {
 					margin='normal'
 				/>
 				<Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-					<Button variant='outlined' onClick={onClose}>
+					<Button variant='outlined' onClick={onClose} tabIndex={1}>
 						{t('modal.close')}
 					</Button>
 
@@ -107,6 +108,7 @@ const AddPostModal: React.FC<AppModalProps> = () => {
 						type='submit'
 						disabled={loading}
 						sx={{ display: 'flex', alignItems: 'center', minWidth: '10em' }}
+						tabIndex={0}
 					>
 						{loading ? (
 							<CircularProgress

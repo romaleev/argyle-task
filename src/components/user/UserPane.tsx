@@ -73,14 +73,13 @@ const UserPane: React.FC<UserPaneProps> = ({ userId, expanded: initExpanded = fa
 						{user.name}
 					</Link>
 
-					<Link
-						component='button'
+					<Typography
 						variant='body1'
-						underline='hover'
-						sx={{ position: 'absolute', left: 0, right: 0, zIndex: '0' }}
+						component='span'
+						sx={{ position: 'absolute', left: 0, right: 0, zIndex: '0', textAlign: 'center' }}
 					>
 						{t('user.posts', { count: postsSorted.length })} {/* Pluralized posts count */}
-					</Link>
+					</Typography>
 
 					{/* Add Post Button */}
 					<Button

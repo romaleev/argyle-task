@@ -99,7 +99,7 @@ const UserInfoModal: React.FC<AppModalProps> = () => {
 				</Typography>
 
 				<Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 2 }}>
-					<Button variant='outlined' color='primary' onClick={onClose}>
+					<Button variant='outlined' color='primary' onClick={onClose} autoFocus>
 						{t('modal.close')}
 					</Button>
 				</Box>
