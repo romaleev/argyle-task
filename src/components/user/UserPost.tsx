@@ -14,7 +14,7 @@ import { UserPostProps } from '#types/appTypes'
 import { useTranslation } from 'react-i18next'
 import { useActions, useComments } from '#src/stores/appStore'
 
-const UserPost: React.FC<UserPostProps> = ({ post }) => {
+const UserPost = ({ post }: UserPostProps) => {
 	const [loading, setLoading] = useState(false)
 	const { t } = useTranslation()
 	const comments = useComments()
@@ -77,7 +77,7 @@ const UserPost: React.FC<UserPostProps> = ({ post }) => {
 								marginLeft: '16px', // Spacing between title and button
 								alignSelf: 'flex-start', // Align button to the top of the content
 							}}
-							data-testid={`delete-button-${post.id}`}
+							data-testid={`delete-button-${post.userId}-${post.id}`}
 						>
 							{loading ? <CircularProgress role='progressbar' size={20} /> : t('user.delete')}
 						</Button>

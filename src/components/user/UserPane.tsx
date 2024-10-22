@@ -15,7 +15,7 @@ import UserPost from '#components/user/UserPost'
 import { useTranslation } from 'react-i18next'
 import { useActions, usePosts, useUsers } from '#src/stores/appStore'
 
-const UserPane: React.FC<UserPaneProps> = ({ userId, expanded: initExpanded = false }) => {
+const UserPane = ({ userId, expanded: initExpanded = false }: UserPaneProps) => {
 	const { t } = useTranslation() // Using i18next for translations
 	const [expanded, setExpanded] = useState<boolean>(initExpanded) // Accordion state
 	const divRef = useRef<HTMLDivElement>(null) // Type the ref properly

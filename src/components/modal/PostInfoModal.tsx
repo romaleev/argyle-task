@@ -1,12 +1,11 @@
 import React from 'react'
 import { Typography, Box, Button } from '@mui/material'
 import AppModal from '#components/modal/AppModal'
-import { AppModalProps } from '#types/appTypes'
 import UserComment from '#components/user/UserComment'
 import { useTranslation } from 'react-i18next'
 import { useActions, useComments, useModals, usePosts, useUsers } from '#src/stores/appStore'
 
-const PostInfoModal: React.FC<AppModalProps> = () => {
+const PostInfoModal = () => {
 	const { t } = useTranslation()
 	const users = useUsers()
 	const posts = usePosts()

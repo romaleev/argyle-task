@@ -17,7 +17,7 @@ const setupModal = (errorMessage = '') => {
 }
 
 describe('ErrorModal', () => {
-	test.only('renders the error message', () => {
+	test('renders the error message', () => {
 		setupModal('Test error message')
 
 		// Check if the error message is displayed

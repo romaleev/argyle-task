@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Link, Typography } from '@mui/material'
 import { UserCommentProps } from '#types/appTypes'
 
-const UserComment: React.FC<UserCommentProps> = ({ comment }) => {
+const UserComment = ({ comment }: UserCommentProps) => {
 	return (
 		<Box my={2} p={2} bgcolor='lightgray' borderRadius='8px'>
 			{/* Name and Email Container */}

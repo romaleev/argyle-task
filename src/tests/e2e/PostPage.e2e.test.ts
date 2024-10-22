@@ -78,12 +78,15 @@ test.describe('PostPage End-to-End Tests', () => {
 
 		const userPane = page.locator(`[data-testid="user-pane-${mockUser.id}"]`)
 		const userPost = userPane.locator(`[data-testid="user-post-${mockUser.id}-${mockPost.id}"]`)
+		const deleteButton = userPost.locator(
+			`[data-testid="delete-button-${mockUser.id}-${mockPost.id}"]`,
+		)
 
 		// Ensure the post is present before deletion
 		await expect(userPost.locator(`text=${mockPost?.title}`)).toBeVisible()
 
 		// Click the "Delete" button for the post
-		await userPost.locator(`button:has-text("${i18n.t('user.delete')}")`).click()
+		await deleteButton.click()
 
 		// Ensure the post is no longer visible after deletion
 		await expect(userPane.locator(`text=${mockPost?.title}`)).not.toBeVisible()

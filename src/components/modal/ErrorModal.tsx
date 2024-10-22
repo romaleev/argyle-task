@@ -3,9 +3,8 @@ import { Typography, Button, Box } from '@mui/material'
 import AppModal from '#components/modal/AppModal'
 import { useTranslation } from 'react-i18next'
 import { useActions, useModals } from '#src/stores/appStore'
-import { AppModalProps } from '#types/appTypes'
 
-const ErrorModal: React.FC<AppModalProps> = () => {
+const ErrorModal = () => {
 	const { t } = useTranslation()
 	const modals = useModals()
 	const actions = useActions()
@@ -20,10 +19,10 @@ const ErrorModal: React.FC<AppModalProps> = () => {
 	return (
 		<AppModal onClose={onClose}>
 			<Box data-testid='error-modal-content'>
-				<Typography variant='h6' color='error' gutterBottom>
+				<Typography data-testid='error-modal-content-title' variant='h6' color='error' gutterBottom>
 					{t('modal.error')}
 				</Typography>
-				<Typography variant='body1' gutterBottom>
+				<Typography data-testid='error-modal-content-text' variant='body1' gutterBottom>
 					{errorMessage}
 				</Typography>
 				<Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 2 }}>

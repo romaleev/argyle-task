@@ -8,7 +8,7 @@ import PostInfoModal from '#components/modal/PostInfoModal'
 import { useTranslation } from 'react-i18next'
 import { useUsers, useActions } from '#src/stores/appStore'
 
-const PostPage: React.FC = () => {
+const PostPage = () => {
 	const [loading, setLoading] = useState(true)
 	const users = useUsers()
 	const actions = useActions()

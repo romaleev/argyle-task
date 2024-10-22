@@ -58,7 +58,7 @@ describe('UserPost', () => {
 		expect(post).toBeDefined()
 
 		// Update the test to find the DELETE button with the correct test ID
-		const deleteButton = screen.getByTestId(`delete-button-${mockPosts[0].id}`)
+		const deleteButton = screen.getByTestId(`delete-button-${mockUser.id}-${mockPosts[0].id}`)
 
 		// Click the delete button
 		await act(async () => {

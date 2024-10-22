@@ -1,3 +1,5 @@
+import React from 'react'
+
 export interface Geo {
 	lat: string
 	lng: string

@@ -24,17 +24,25 @@ test.describe('ErrorModal', () => {
 		const modal = page.locator('[data-testid="error-modal-content"]')
 
 		// Ensure the error modal heading appears using hasText
-		await expect(modal.locator('h6').filter({ hasText: i18n.t('modal.error') })).toBeVisible()
+		await expect(
+			modal
+				.locator('[data-testid="error-modal-content-title"]')
+				.filter({ hasText: i18n.t('modal.error') }),
+		).toBeVisible()
 
 		// Ensure the error message appears correctly
 		await expect(
-			modal.locator('p').filter({
+			modal.locator('[data-testid="error-modal-content-text"]').filter({
 				hasText: i18n.t('modal.failed_to_delete_post', { error: 'TypeError: Failed to fetch' }),
 			}),
 		).toBeVisible()
 
 		// Close the error modal
 		await modal.locator(`text=${i18n.t('modal.close')}`).click()
-		await expect(modal.locator('h6').filter({ hasText: i18n.t('modal.error') })).not.toBeVisible()
+		await expect(
+			modal
+				.locator('[data-testid="error-modal-content-title"]')
+				.filter({ hasText: i18n.t('modal.error') }),
+		).not.toBeVisible()
 	})
 })

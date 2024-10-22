@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { TextField, Button, CircularProgress, Typography, Box } from '@mui/material'
-import { AppModalProps, PostFormInputs } from '#types/appTypes'
+import { PostFormInputs } from '#types/appTypes'
 import AppModal from '#components/modal/AppModal'
 import { useTranslation } from 'react-i18next'
 import { useActions, useModals, useUsers } from '#src/stores/appStore'
 
-const AddPostModal: React.FC<AppModalProps> = () => {
+const AddPostModal = () => {
 	const { t } = useTranslation()
 	const {
 		register,

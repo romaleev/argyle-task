@@ -1,11 +1,10 @@
 import React from 'react'
 import { Typography, Divider, Link, Box, Button } from '@mui/material'
-import { AppModalProps } from '#types/appTypes'
 import AppModal from '#components/modal/AppModal'
 import { useTranslation } from 'react-i18next'
 import { useActions, useModals, useUsers } from '#src/stores/appStore'
 
-const UserInfoModal: React.FC<AppModalProps> = () => {
+const UserInfoModal = () => {
 	const { t } = useTranslation()
 	const modals = useModals()
 	const users = useUsers()

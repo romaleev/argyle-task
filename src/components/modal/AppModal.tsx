@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, Box } from '@mui/material'
 import { AppModalProps } from '#types/appTypes'
 
-const AppModal: React.FC<AppModalProps> = ({ onClose, children, width = '600px' }) => {
+const AppModal = ({ onClose, children, width = '600px' }: AppModalProps) => {
 	return (
 		<Modal open={true} onClose={onClose}>
 			<Box
